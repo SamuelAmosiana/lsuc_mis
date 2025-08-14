@@ -15,6 +15,19 @@
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                 </flux:navlist.group>
+
+                @if(in_array(auth()->user()->role ?? '', ['super_admin','admin']))
+                    <flux:navlist.group heading="Admin" class="grid">
+                        <flux:navlist.item icon="layout-grid" :href="route('admin.home')" :current="request()->routeIs('admin.home')" wire:navigate>Admin Home</flux:navlist.item>
+                        <flux:navlist.item icon="layout-grid" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>Users</flux:navlist.item>
+                        <flux:navlist.item icon="layout-grid" :href="route('admin.roles')" :current="request()->routeIs('admin.roles')" wire:navigate>Roles</flux:navlist.item>
+                        <flux:navlist.item icon="layout-grid" :href="route('admin.departments')" :current="request()->routeIs('admin.departments')" wire:navigate>Departments</flux:navlist.item>
+                        <flux:navlist.item icon="layout-grid" :href="route('admin.schools')" :current="request()->routeIs('admin.schools')" wire:navigate>Schools</flux:navlist.item>
+                        <flux:navlist.item icon="layout-grid" :href="route('admin.programmes')" :current="request()->routeIs('admin.programmes')" wire:navigate>Programmes</flux:navlist.item>
+                        <flux:navlist.item icon="layout-grid" :href="route('admin.courses')" :current="request()->routeIs('admin.courses')" wire:navigate>Courses</flux:navlist.item>
+                        <flux:navlist.item icon="cog" :href="route('admin.settings')" :current="request()->routeIs('admin.settings')" wire:navigate>System Settings</flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
             </flux:navlist>
 
             <flux:spacer />

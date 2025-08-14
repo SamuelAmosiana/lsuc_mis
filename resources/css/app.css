@@ -11,6 +11,11 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
+    /* Lusaka South College brand colors */
+    --color-brand-orange-500: #f97316; /* orange */
+    --color-brand-green-600: #16a34a;  /* green */
+    --color-brand-black: #000000;      /* black */
+
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
     --color-zinc-200: #e5e5e5;
@@ -23,16 +28,17 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
+    /* Use orange as primary accent; buttons, highlights */
+    --color-accent: var(--color-brand-orange-500);
+    --color-accent-content: var(--color-brand-orange-500);
     --color-accent-foreground: var(--color-white);
 }
 
 @layer theme {
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-accent: var(--color-brand-green-600);
+        --color-accent-content: var(--color-brand-green-600);
+        --color-accent-foreground: var(--color-zinc-900);
     }
 }
 

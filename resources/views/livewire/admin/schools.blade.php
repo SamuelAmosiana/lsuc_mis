@@ -72,7 +72,7 @@ new #[Layout('components.layouts.app')] class extends Component {
 
     <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold">Schools</h2>
-        <flux:button wire:click="startCreate" variant="secondary">New School</flux:button>
+        <flux:button wire:click="startCreate" variant="outline">New School</flux:button>
     </div>
 
     <div class="grid md:grid-cols-3 gap-4">
@@ -101,7 +101,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                             <td class="p-2">{{ $s->school_id }}</td>
                             <td class="p-2">{{ $s->name }}</td>
                             <td class="p-2 flex gap-2">
-                                <flux:button size="xs" variant="secondary" wire:click="edit({{ $s->school_id }})">Edit</flux:button>
+                                <flux:button size="xs" variant="outline" wire:click="edit({{ $s->school_id }})">Edit</flux:button>
                                 <flux:button size="xs" variant="danger" wire:click="delete({{ $s->school_id }})">Delete</flux:button>
                             </td>
                         </tr>

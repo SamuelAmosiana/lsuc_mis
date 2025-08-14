@@ -1,31 +1,28 @@
 <?php
 
-use App\Models\CourseLSC as Course;
-use App\Models\Programme;
+use App\Models\Role;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.app')] class extends Component {
-    public $courses;
-    public $programmes;
+    public $roles;
     public ?int $editingId = null;
 
-    #[Validate('required|string|max:150')]
-    public string $name = '';
+    #[Validate('required|string|max:100')]
+    public string $role_name = '';
 
-    #[Validate('nullable|integer|exists:programme,programme_id')]
-    public $programme_id = '';
+    #[Validate('nullable|string|max:500')]
+    public string $role_description = '';
 
     public function mount(): void
     {
-        $this->programmes = Programme::orderBy('name')->get();
         $this->loadData();
     }
 
     public function loadData(): void
     {
-        $this->courses = Course::with('programme')->orderBy('name')->get();
+        $this->roles = Role::orderBy('role_name')->get();
     }
 
     public function startCreate(): void
@@ -36,42 +33,42 @@ new #[Layout('components.layouts.app')] class extends Component {
     public function create(): void
     {
         $this->validate();
-        Course::create(['name' => $this->name, 'programme_id' => $this->programme_id ?: null]);
+        Role::create(['role_name' => $this->role_name, 'role_description' => $this->role_description ?: null]);
         $this->resetForm();
         $this->loadData();
-        session()->flash('status', 'Course created');
+        session()->flash('status', 'Role created');
     }
 
     public function edit(int $id): void
     {
-        $c = Course::findOrFail($id);
-        $this->editingId = $c->course_id;
-        $this->name = $c->name;
-        $this->programme_id = $c->programme_id;
+        $r = Role::findOrFail($id);
+        $this->editingId = $r->role_id;
+        $this->role_name = $r->role_name;
+        $this->role_description = $r->role_description ?? '';
     }
 
     public function update(): void
     {
         $this->validate();
-        $c = Course::findOrFail($this->editingId);
-        $c->update(['name' => $this->name, 'programme_id' => $this->programme_id ?: null]);
+        $r = Role::findOrFail($this->editingId);
+        $r->update(['role_name' => $this->role_name, 'role_description' => $this->role_description ?: null]);
         $this->resetForm();
         $this->loadData();
-        session()->flash('status', 'Course updated');
+        session()->flash('status', 'Role updated');
     }
 
     public function delete(int $id): void
     {
-        Course::whereKey($id)->delete();
+        Role::whereKey($id)->delete();
         $this->loadData();
-        session()->flash('status', 'Course deleted');
+        session()->flash('status', 'Role deleted');
     }
 
     private function resetForm(): void
     {
         $this->editingId = null;
-        $this->name = '';
-        $this->programme_id = '';
+        $this->role_name = '';
+        $this->role_description = '';
     }
 }; ?>
 
@@ -79,19 +76,14 @@ new #[Layout('components.layouts.app')] class extends Component {
     <x-auth-session-status class="text-center" :status="session('status')" />
 
     <div class="flex items-center justify-between">
-        <h2 class="text-xl font-semibold">Courses</h2>
-        <flux:button wire:click="startCreate" variant="outline">New Course</flux:button>
+        <h2 class="text-xl font-semibold">Roles</h2>
+        <flux:button wire:click="startCreate" variant="outline">New Role</flux:button>
     </div>
 
     <div class="grid md:grid-cols-3 gap-4">
         <form class="flex flex-col gap-4" wire:submit="{{ $editingId ? 'update' : 'create' }}">
-            <flux:input wire:model="name" label="Name" required />
-            <flux:select wire:model="programme_id" label="Programme">
-                <option value="">-- None --</option>
-                @foreach($programmes as $p)
-                    <option value="{{ $p->programme_id }}">{{ $p->name }}</option>
-                @endforeach
-            </flux:select>
+            <flux:input wire:model="role_name" label="Name" required />
+            <flux:textarea wire:model="role_description" label="Description" />
             <div class="flex gap-2">
                 <flux:button type="submit" variant="primary">{{ $editingId ? 'Update' : 'Create' }}</flux:button>
                 @if($editingId)
@@ -106,19 +98,19 @@ new #[Layout('components.layouts.app')] class extends Component {
                     <tr class="text-left">
                         <th class="p-2">ID</th>
                         <th class="p-2">Name</th>
-                        <th class="p-2">Programme</th>
+                        <th class="p-2">Description</th>
                         <th class="p-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($courses as $c)
+                    @foreach($roles as $r)
                         <tr class="border-t border-neutral-200 dark:border-neutral-700">
-                            <td class="p-2">{{ $c->course_id }}</td>
-                            <td class="p-2">{{ $c->name }}</td>
-                            <td class="p-2">{{ $c->programme->name ?? '-' }}</td>
+                            <td class="p-2">{{ $r->role_id }}</td>
+                            <td class="p-2">{{ $r->role_name }}</td>
+                            <td class="p-2">{{ $r->role_description }}</td>
                             <td class="p-2 flex gap-2">
-                                <flux:button size="xs" variant="outline" wire:click="edit({{ $c->course_id }})">Edit</flux:button>
-                                <flux:button size="xs" variant="danger" wire:click="delete({{ $c->course_id }})">Delete</flux:button>
+                                <flux:button size="xs" variant="outline" wire:click="edit({{ $r->role_id }})">Edit</flux:button>
+                                <flux:button size="xs" variant="danger" wire:click="delete({{ $r->role_id }})">Delete</flux:button>
                             </td>
                         </tr>
                     @endforeach

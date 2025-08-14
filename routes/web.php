@@ -30,10 +30,14 @@ Route::middleware(['auth'])->group(function () {
 
 // Admin CRUD routes
 Route::middleware(['auth','verified','role:super_admin,admin'])->group(function () {
+    Volt::route('admin', 'admin.dashboard')->name('admin.home');
     Volt::route('admin/departments', 'admin.departments')->name('admin.departments');
     Volt::route('admin/schools', 'admin.schools')->name('admin.schools');
     Volt::route('admin/programmes', 'admin.programmes')->name('admin.programmes');
     Volt::route('admin/courses', 'admin.courses')->name('admin.courses');
+    Volt::route('admin/users', 'admin.users')->name('admin.users');
+    Volt::route('admin/roles', 'admin.roles')->name('admin.roles');
+    Volt::route('admin/settings', 'admin.settings')->name('admin.settings');
 });
 
 require __DIR__.'/auth.php';
