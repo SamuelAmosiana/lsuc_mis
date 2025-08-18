@@ -18,13 +18,50 @@
 
                 @if(in_array(auth()->user()->role ?? '', ['super_admin','admin']))
                     <flux:navlist.group heading="Admin" class="grid">
-                        <flux:navlist.item icon="layout-grid" :href="route('admin.home')" :current="request()->routeIs('admin.home')" wire:navigate>Admin Home</flux:navlist.item>
-                        <flux:navlist.item icon="layout-grid" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>Users</flux:navlist.item>
-                        <flux:navlist.item icon="layout-grid" :href="route('admin.roles')" :current="request()->routeIs('admin.roles')" wire:navigate>Roles</flux:navlist.item>
-                        <flux:navlist.item icon="layout-grid" :href="route('admin.departments')" :current="request()->routeIs('admin.departments')" wire:navigate>Departments</flux:navlist.item>
-                        <flux:navlist.item icon="layout-grid" :href="route('admin.schools')" :current="request()->routeIs('admin.schools')" wire:navigate>Schools</flux:navlist.item>
-                        <flux:navlist.item icon="layout-grid" :href="route('admin.programmes')" :current="request()->routeIs('admin.programmes')" wire:navigate>Programmes</flux:navlist.item>
-                        <flux:navlist.item icon="layout-grid" :href="route('admin.courses')" :current="request()->routeIs('admin.courses')" wire:navigate>Courses</flux:navlist.item>
+                        <flux:navlist.item :href="route('admin.home')" :current="request()->routeIs('admin.home')" wire:navigate>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                            </svg>
+                            Admin Home
+                        </flux:navlist.item>
+                        <flux:navlist.item :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            Users
+                        </flux:navlist.item>
+                        <flux:navlist.item :href="route('admin.roles')" :current="request()->routeIs('admin.roles')" wire:navigate>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            Roles
+                        </flux:navlist.item>
+                        <flux:navlist.item :href="route('admin.departments')" :current="request()->routeIs('admin.departments')" wire:navigate>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            Departments
+                        </flux:navlist.item>
+                        <flux:navlist.item :href="route('admin.schools')" :current="request()->routeIs('admin.schools')" wire:navigate>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                            </svg>
+                            Schools
+                        </flux:navlist.item>
+                        <flux:navlist.item :href="route('admin.programmes')" :current="request()->routeIs('admin.programmes')" wire:navigate>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Programmes
+                        </flux:navlist.item>
+                        <flux:navlist.item :href="route('admin.courses')" :current="request()->routeIs('admin.courses')" wire:navigate>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Courses
+                        </flux:navlist.item>
                         <flux:navlist.item icon="cog" :href="route('admin.settings')" :current="request()->routeIs('admin.settings')" wire:navigate>System Settings</flux:navlist.item>
                     </flux:navlist.group>
                 @endif

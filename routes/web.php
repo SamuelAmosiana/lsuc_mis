@@ -15,14 +15,38 @@ Route::view('dashboard', 'dashboard')
 // Role-based dashboards
 Route::middleware(['auth', 'verified'])->group(function () {
     // Admin Dashboard
-    Route::view('/admin/dashboard', 'dashboard')
-        ->middleware('role:super_admin,admin')
-        ->name('admin.dashboard');
+    Route::prefix('admin')->name('admin.')->middleware('role:super_admin,admin')->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/users', [\App\Http\Controllers\Admin\AdminController::class, 'userManagement'])->name('users.management');
+        Route::get('/reports', [\App\Http\Controllers\Admin\AdminController::class, 'reports'])->name('reports');
+    });
         
     // Coordinator Dashboard
-    Route::view('/coordinator/dashboard', 'dashboard')
-        ->middleware('role:programme_coordinator')
-        ->name('coordinator.dashboard');
+    Route::prefix('coordinator')->name('coordinator.')->middleware('role:programme_coordinator')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'dashboard'])
+            ->name('dashboard');
+            
+        // Academic Calendar
+        Route::get('/academic-calendar', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'academicCalendar'])
+            ->name('calendar');
+            
+        // Timetables
+        Route::get('/timetables', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'timetables'])
+            ->name('timetables');
+            
+        // Student Registrations
+        Route::get('/registrations', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'studentRegistrations'])
+            ->name('registrations');
+            
+        // Lecturer Attendance
+        Route::get('/attendance', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'lecturerAttendance'])
+            ->name('attendance');
+            
+        // Results
+        Route::get('/results', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'results'])
+            ->name('results');
+    });
         
     // Accounts Dashboard
     Route::view('/accounts/dashboard', 'dashboard')
