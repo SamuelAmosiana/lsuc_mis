@@ -14,6 +14,14 @@ Route::view('dashboard', 'dashboard')
 
 // Role-based dashboards
 Route::middleware(['auth', 'verified'])->group(function () {
+    // HR Dashboard
+    Route::prefix('hr')->name('hr.')->middleware('role:hr')->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\HR\HRController::class, 'dashboard'])->name('dashboard');
+        Route::get('/attendance', [\App\Http\Controllers\HR\AttendanceController::class, 'index'])->name('attendance.index');
+        Route::get('/salaries', [\App\Http\Controllers\HR\SalaryController::class, 'index'])->name('salaries.index');
+        Route::get('/students', [\App\Http\Controllers\HR\StudentController::class, 'index'])->name('students.index');
+    });
+    
     // Admin Dashboard
     Route::prefix('admin')->name('admin.')->middleware('role:super_admin,admin')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
@@ -38,6 +46,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Student Registrations
         Route::get('/registrations', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'studentRegistrations'])
             ->name('registrations');
+            
+        // Approve/Reject Registration
+        Route::post('/registrations/{registration}/approve', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'approveRegistration'])
+            ->name('registrations.approve');
+            
+        Route::post('/registrations/{registration}/reject', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'rejectRegistration'])
+            ->name('registrations.reject');
             
         // Lecturer Attendance
         Route::get('/attendance', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'lecturerAttendance'])

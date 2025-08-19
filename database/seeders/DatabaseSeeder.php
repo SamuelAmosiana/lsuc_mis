@@ -18,7 +18,10 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             SchoolProgrammeCourseSeeder::class,
             GradeFeeSeeder::class,
+            AcademicCalendarSeeder::class,
             TestUserSeeder::class,
+            CourseRegistrationSeeder::class,
+            PendingCourseRegistrationsSeeder::class, // Add this line
         ]);
     }
 }

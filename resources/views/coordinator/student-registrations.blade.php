@@ -64,7 +64,7 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($registrations as $registration)
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-gray-50" data-registration-id="{{ $registration->id }}">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
@@ -161,20 +161,151 @@
 <script>
 function approveRegistration(registrationId) {
     if (confirm('Are you sure you want to approve this registration?')) {
-        // Implement approval logic
-        console.log('Approving registration:', registrationId);
-        // You would typically make an AJAX call here
+        // Show loading state
+        const row = document.querySelector(`tr[data-registration-id="${registrationId}"]`);
+        if (row) row.classList.add('opacity-50', 'pointer-events-none');
+        
+        // Make AJAX call to approve
+        fetch(`/coordinator/registrations/${registrationId}/approve`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ _method: 'POST' })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message and remove the row
+                showAlert('success', data.message);
+                const row = document.querySelector(`tr[data-registration-id="${registrationId}"]`);
+                if (row) row.remove();
+                
+                // Update the pending count
+                updatePendingCount(-1);
+            } else {
+                showAlert('error', data.message || 'Failed to approve registration');
+                if (row) row.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('error', 'An error occurred while processing your request');
+            if (row) row.classList.remove('opacity-50', 'pointer-events-none');
+        });
     }
 }
 
 function rejectRegistration(registrationId) {
     const reason = prompt('Please enter the reason for rejection:');
-    if (reason !== null) {
-        // Implement rejection logic with reason
-        console.log('Rejecting registration:', registrationId, 'Reason:', reason);
-        // You would typically make an AJAX call here
+    if (reason !== null && reason.trim() !== '') {
+        // Show loading state
+        const row = document.querySelector(`tr[data-registration-id="${registrationId}"]`);
+        if (row) row.classList.add('opacity-50', 'pointer-events-none');
+        
+        // Make AJAX call to reject
+        fetch(`/coordinator/registrations/${registrationId}/reject`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                _method: 'POST',
+                reason: reason
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message and remove the row
+                showAlert('success', data.message);
+                const row = document.querySelector(`tr[data-registration-id="${registrationId}"]`);
+                if (row) row.remove();
+                
+                // Update the pending count
+                updatePendingCount(-1);
+            } else {
+                showAlert('error', data.message || 'Failed to reject registration');
+                if (row) row.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('error', 'An error occurred while processing your request');
+            if (row) row.classList.remove('opacity-50', 'pointer-events-none');
+        });
+    } else if (reason !== null) {
+        // User clicked OK but left the reason empty
+        showAlert('error', 'Please provide a reason for rejection');
     }
 }
+
+function showAlert(type, message) {
+    // Create alert element
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `fixed top-4 right-4 p-4 rounded-md ${type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`;
+    alertDiv.innerHTML = `
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 ${type === 'success' ? 'text-green-400' : 'text-red-400'}" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p class="text-sm font-medium">
+                    ${message}
+                </p>
+            </div>
+            <div class="ml-4">
+                <button type="button" class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none" onclick="this.parentElement.parentElement.remove()">
+                    <span class="sr-only">Close</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Add to DOM
+    document.body.appendChild(alertDiv);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+
+function updatePendingCount(change) {
+    const pendingCountElement = document.querySelector('.pending-count');
+    if (pendingCountElement) {
+        const currentCount = parseInt(pendingCountElement.textContent) || 0;
+        const newCount = Math.max(0, currentCount + change);
+        pendingCountElement.textContent = newCount;
+        
+        // Update the count in the stats card if it exists
+        const statsCardCount = document.querySelector('.pending-registrations-count');
+        if (statsCardCount) {
+            statsCardCount.textContent = newCount;
+        }
+    }
+}
+
+// Add CSRF token to all AJAX requests
+document.addEventListener('DOMContentLoaded', function() {
+    // Add registration ID to each row for easier selection
+    document.querySelectorAll('tr[data-registration-id]').forEach(row => {
+        const registrationId = row.getAttribute('data-registration-id');
+        if (!registrationId) {
+            row.setAttribute('data-registration-id', row.dataset.registrationId);
+        }
+    });
+});
 </script>
 @endpush
 @endsection
