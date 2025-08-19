@@ -21,7 +21,12 @@ class DatabaseSeeder extends Seeder
             AcademicCalendarSeeder::class,
             TestUserSeeder::class,
             CourseRegistrationSeeder::class,
-            PendingCourseRegistrationsSeeder::class, // Add this line
+            PendingCourseRegistrationsSeeder::class,
+            // HR Module Seeders
+            ProgramsTableSeeder::class,
+            UsersTableSeeder::class,
+            StudentsTableSeeder::class,
+            StatusNotesTableSeeder::class,
         ]);
     }
 }
