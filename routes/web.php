@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\Accounts\AccountsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -72,6 +73,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/lecturer/dashboard', 'dashboard')
         ->middleware('role:lecturer')
         ->name('lecturer.dashboard');
+    
+    // Accounts Dashboard
+    Route::prefix('accounts')->name('accounts.')->middleware('role:accountant,admin,super_admin')->group(function () {
+        Route::get('/dashboard', [AccountsController::class, 'dashboard'])->name('dashboard');
+        Route::get('/income', [AccountsController::class, 'income'])->name('income.index');
+        Route::get('/expenses', [AccountsController::class, 'expenses'])->name('expenses.index');
+        Route::get('/reports', [AccountsController::class, 'reports'])->name('reports.index');
+        Route::get('/fees', [AccountsController::class, 'studentFees'])->name('fees.index');
+        Route::post('/fees/{fee}/payments', [AccountsController::class, 'recordPayment'])->name('fees.record-payment');
+    });
     
     // Student Dashboard
     Route::prefix('student')->name('student.')->middleware('role:student')->group(function () {

@@ -190,5 +190,8 @@
         {{ $slot }}
 
         @fluxScripts
+        
+        <!-- Accounts Module Scripts -->
+        @accountsScripts
     </body>
 </html>
