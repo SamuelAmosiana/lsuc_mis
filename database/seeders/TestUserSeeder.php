@@ -92,6 +92,17 @@ class TestUserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        // Enrollment Officer
+        $enrollmentOfficer = User::updateOrCreate(
+            ['email' => 'enrollment@lscollege.test'],
+            [
+                'name' => 'Enrollment Officer',
+                'password' => Hash::make('password'),
+                'role' => 'enrollment_officer',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
 
