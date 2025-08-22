@@ -81,6 +81,17 @@ class TestUserSeeder extends Seeder
             ['staff_id' => $staff->staff_id, 'role_id' => $role->role_id],
             []
         );
+
+        // Accounts User
+        $accountsUser = User::updateOrCreate(
+            ['email' => 'accounts@lscollege.test'],
+            [
+                'name' => 'Accounts Officer',
+                'password' => Hash::make('password'),
+                'role' => 'accounts',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
 
