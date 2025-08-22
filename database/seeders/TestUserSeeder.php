@@ -114,6 +114,17 @@ class TestUserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        // Librarian
+        $librarian = User::updateOrCreate(
+            ['email' => 'librarian@lscollege.test'],
+            [
+                'name' => 'Library Manager',
+                'password' => Hash::make('password'),
+                'role' => 'librarian',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
 
