@@ -103,6 +103,17 @@ class TestUserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        // Front Desk Officer
+        $frontDeskOfficer = User::updateOrCreate(
+            ['email' => 'frontdesk@lscollege.test'],
+            [
+                'name' => 'Front Desk Officer',
+                'password' => Hash::make('password'),
+                'role' => 'front_desk_officer',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
 
