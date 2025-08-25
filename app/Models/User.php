@@ -35,6 +35,14 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    
+    /**
+     * Get the courses that the lecturer is assigned to.
+     */
+    public function courses()
+    {
+        return $this->belongsToMany(\App\Models\Course::class, 'lecturer_course', 'user_id', 'course_id');
+    }
 
     /**
      * Get the attributes that should be cast.

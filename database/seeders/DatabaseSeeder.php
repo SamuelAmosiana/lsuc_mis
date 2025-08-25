@@ -13,13 +13,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed roles
+        $this->call(RoleSeeder::class);
+        
+        // Seed test users
+        $this->call(TestUserSeeder::class);
+        
+        // Seed test lecturer
+        $this->call(TestLecturerSeeder::class);
+        
+        // Seed other data
         $this->call([
-            RoleSeeder::class,
             DepartmentSeeder::class,
             SchoolProgrammeCourseSeeder::class,
             GradeFeeSeeder::class,
             AcademicCalendarSeeder::class,
-            TestUserSeeder::class,
             CourseRegistrationSeeder::class,
             PendingCourseRegistrationsSeeder::class,
             // HR Module Seeders
@@ -28,5 +36,8 @@ class DatabaseSeeder extends Seeder
             StudentsTableSeeder::class,
             StatusNotesTableSeeder::class,
         ]);
+        
+        // Assign courses to lecturer
+        $this->call(LecturerCourseSeeder::class);
     }
 }

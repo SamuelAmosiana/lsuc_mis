@@ -14,6 +14,35 @@ Route::view('dashboard', 'dashboard')
     ->name('dashboard');
 
 // Role-based dashboards
+// Test route for logging - no auth required
+Route::get('/test-logger', function () {
+    \Log::info('Test log message from /test-logger route');
+    return response()->json([
+        'message' => 'Log entry created',
+        'log_path' => storage_path('logs/laravel.log')
+    ]);
+});
+
+// Test lecturer route - requires auth and lecturer role
+Route::get('/test-lecturer-route', function () {
+    $user = auth()->user();
+    
+    // Get assigned courses
+    $assignedCourses = $user->courses()->with('program')->get();
+    
+    return response()->json([
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->role,
+        ],
+        'assigned_courses' => $assignedCourses,
+        'is_lecturer' => $user->role === 'lecturer',
+        'is_authenticated' => auth()->check(),
+    ]);
+})->middleware(['auth', 'role:lecturer']);
+
 Route::middleware(['auth', 'verified'])->group(function () {
     // HR Dashboard
     Route::prefix('hr')->name('hr.')->middleware('role:hr')->group(function () {
@@ -69,11 +98,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('role:accounts')
         ->name('accounts.dashboard');
         
-    // Lecturer Dashboard
-    Route::view('/lecturer/dashboard', 'dashboard')
-        ->middleware('role:lecturer')
-        ->name('lecturer.dashboard');
-    
     // Accounts Dashboard
     Route::prefix('accounts')->name('accounts.')->middleware('role:accountant,admin,super_admin')->group(function () {
         Route::get('/dashboard', [AccountsController::class, 'dashboard'])->name('dashboard');
@@ -85,6 +109,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     
     // Student Dashboard
+    // Lecturer Dashboard
+    Route::prefix('lecturer')->name('lecturer.')->middleware('role:lecturer')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Lecturer\LecturerController::class, 'dashboard'])->name('dashboard');
+        
+        // Courses
+        Route::get('/courses', [\App\Http\Controllers\Lecturer\CourseController::class, 'index'])->name('courses.index');
+        Route::get('/courses/{course}', [\App\Http\Controllers\Lecturer\CourseController::class, 'show'])->name('courses.show');
+        
+        // Assessments
+        Route::get('/assessments', [\App\Http\Controllers\Lecturer\AssessmentController::class, 'index'])->name('assessments.index');
+        Route::get('/assessments/create', [\App\Http\Controllers\Lecturer\AssessmentController::class, 'create'])->name('assessments.create');
+        Route::post('/assessments', [\App\Http\Controllers\Lecturer\AssessmentController::class, 'store'])->name('assessments.store');
+        Route::get('/assessments/{assessment}/submissions', [\App\Http\Controllers\Lecturer\SubmissionController::class, 'index'])->name('assessments.submissions');
+        
+        // Results
+        Route::get('/results', [\App\Http\Controllers\Lecturer\ResultController::class, 'index'])->name('results.index');
+        Route::get('/upload-marks', [\App\Http\Controllers\Lecturer\LecturerController::class, 'showUploadMarksForm'])->name('upload-marks');
+        Route::post('/upload-marks', [\App\Http\Controllers\Lecturer\LecturerController::class, 'uploadMarks'])->name('upload-marks.store');
+        
+        // Attendance
+        Route::get('/attendance', [\App\Http\Controllers\Lecturer\AttendanceController::class, 'index'])->name('attendance.index');
+        Route::post('/attendance', [\App\Http\Controllers\Lecturer\AttendanceController::class, 'store'])->name('attendance.store');
+        
+        // Students
+        Route::get('/students', [\App\Http\Controllers\Lecturer\StudentController::class, 'index'])->name('students.index');
+        
+        // Profile
+        Route::get('/profile', [\App\Http\Controllers\Lecturer\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [\App\Http\Controllers\Lecturer\ProfileController::class, 'update'])->name('profile.update');
+    });
+    
+    // Student Routes
     Route::prefix('student')->name('student.')->middleware('role:student')->group(function () {
         // Dashboard
         Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');

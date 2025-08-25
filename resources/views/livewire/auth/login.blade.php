@@ -40,7 +40,16 @@ new #[Layout('components.layouts.auth')] class extends Component {
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $role = Auth::user()->role;
+        $user = Auth::user();
+        $role = $user->role;
+        
+        // Log the login attempt
+        \Log::info('User logged in', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'role' => $role,
+            'intended' => session()->get('url.intended')
+        ]);
 
         $redirectRoute = match ($role) {
             'super_admin', 'admin' => 'admin.dashboard',
@@ -50,6 +59,13 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'student' => 'student.dashboard',
             default => 'dashboard',
         };
+        
+        // Log the intended redirect
+        \Log::info('Redirecting user', [
+            'user_id' => $user->id,
+            'route' => $redirectRoute,
+            'url' => route($redirectRoute, absolute: false)
+        ]);
 
         $this->redirectIntended(default: route($redirectRoute, absolute: false), navigate: true);
     }

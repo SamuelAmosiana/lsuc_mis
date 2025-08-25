@@ -53,4 +53,13 @@ class Course extends Model
     {
         return $this->hasMany(CourseRegistration::class, 'course_id', 'course_id');
     }
+    
+    /**
+     * Get the lecturers who teach this course.
+     */
+    public function lecturers()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'lecturer_course', 'course_id', 'user_id')
+            ->where('role', 'lecturer');
+    }
 }
