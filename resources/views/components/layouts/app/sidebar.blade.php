@@ -75,6 +75,16 @@
                     </flux:navlist.group>
                 @endif
 
+                @if((auth()->user()->role ?? '') === 'accounts')
+                    <flux:navlist.group heading="Accounts" class="grid">
+                        <flux:navlist.item :href="route('accounts.dashboard')" :current="request()->routeIs('accounts.dashboard')" wire:navigate>Dashboard</flux:navlist.item>
+                        <flux:navlist.item :href="route('accounts.fees')" :current="request()->routeIs('accounts.fees')" wire:navigate>Fees</flux:navlist.item>
+                        <flux:navlist.item :href="route('accounts.income')" :current="request()->routeIs('accounts.income')" wire:navigate>Income</flux:navlist.item>
+                        <flux:navlist.item :href="route('accounts.expenses')" :current="request()->routeIs('accounts.expenses')" wire:navigate>Expenses</flux:navlist.item>
+                        <flux:navlist.item :href="route('accounts.reports')" :current="request()->routeIs('accounts.reports')" wire:navigate>Reports</flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
+
                 @if((auth()->user()->role ?? '') === 'lecturer')
                     <flux:navlist.group heading="Lecturer" class="grid">
                         <flux:navlist.item :href="route('lecturer.dashboard')" :current="request()->routeIs('lecturer.dashboard')" wire:navigate>Dashboard</flux:navlist.item>

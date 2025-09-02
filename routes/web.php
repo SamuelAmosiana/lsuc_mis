@@ -93,19 +93,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('results');
     });
         
-    // Accounts Dashboard
-    Route::view('/accounts/dashboard', 'dashboard')
-        ->middleware('role:accounts')
-        ->name('accounts.dashboard');
-        
-    // Accounts Dashboard
-    Route::prefix('accounts')->name('accounts.')->middleware('role:accountant,admin,super_admin')->group(function () {
-        Route::get('/dashboard', [AccountsController::class, 'dashboard'])->name('dashboard');
-        Route::get('/income', [AccountsController::class, 'income'])->name('income.index');
-        Route::get('/expenses', [AccountsController::class, 'expenses'])->name('expenses.index');
-        Route::get('/reports', [AccountsController::class, 'reports'])->name('reports.index');
-        Route::get('/fees', [AccountsController::class, 'studentFees'])->name('fees.index');
-        Route::post('/fees/{fee}/payments', [AccountsController::class, 'recordPayment'])->name('fees.record-payment');
+    // Accounts (Volt pages)
+    Route::prefix('accounts')->name('accounts.')->middleware('role:accounts')->group(function () {
+        Volt::route('/dashboard', 'accounts.dashboard')->name('dashboard');
+        Volt::route('/fees', 'accounts.fees')->name('fees');
+        Volt::route('/income', 'accounts.income')->name('income');
+        Volt::route('/expenses', 'accounts.expenses')->name('expenses');
+        Volt::route('/reports', 'accounts.reports')->name('reports');
     });
     
     // Student Dashboard
