@@ -59,38 +59,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reports', [\App\Http\Controllers\Admin\AdminController::class, 'reports'])->name('reports');
     });
         
-    // Coordinator Dashboard
+    // Coordinator (Volt pages)
     Route::prefix('coordinator')->name('coordinator.')->middleware('role:programme_coordinator')->group(function () {
-        // Dashboard
-        Route::get('/dashboard', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'dashboard'])
-            ->name('dashboard');
-            
-        // Academic Calendar
-        Route::get('/academic-calendar', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'academicCalendar'])
-            ->name('calendar');
-            
-        // Timetables
-        Route::get('/timetables', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'timetables'])
-            ->name('timetables');
-            
-        // Student Registrations
-        Route::get('/registrations', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'studentRegistrations'])
-            ->name('registrations');
-            
-        // Approve/Reject Registration
-        Route::post('/registrations/{registration}/approve', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'approveRegistration'])
-            ->name('registrations.approve');
-            
-        Route::post('/registrations/{registration}/reject', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'rejectRegistration'])
-            ->name('registrations.reject');
-            
-        // Lecturer Attendance
-        Route::get('/attendance', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'lecturerAttendance'])
-            ->name('attendance');
-            
-        // Results
-        Route::get('/results', [\App\Http\Controllers\Coordinator\ProgrammesCoordinatorController::class, 'results'])
-            ->name('results');
+        Volt::route('/dashboard', 'coordinator.dashboard')->name('dashboard');
+        Volt::route('/academic-calendar', 'coordinator.calendar')->name('calendar');
+        Volt::route('/timetables', 'coordinator.timetables')->name('timetables');
+        Volt::route('/registrations', 'coordinator.registrations')->name('registrations');
     });
         
     // Accounts (Volt pages)
@@ -146,6 +120,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/library', [StudentController::class, 'library'])->name('library');
         Route::get('/notices', [StudentController::class, 'notices'])->name('notices');
         Route::get('/support', [StudentController::class, 'support'])->name('support');
+    });
+    
+    // Enrollment Office (Volt pages)
+    Route::prefix('enrollment')->name('enrollment.')->middleware('role:enrollment_officer')->group(function () {
+        Volt::route('/dashboard', 'enrollment.dashboard')->name('dashboard');
+        Volt::route('/applications', 'enrollment.applications')->name('applications');
+        Volt::route('/accommodation', 'enrollment.accommodation')->name('accommodation');
+        Volt::route('/communications', 'enrollment.communications')->name('communications');
+    });
+
+    // Front Desk (Volt pages)
+    Route::prefix('frontdesk')->name('frontdesk.')->middleware('role:front_desk_officer')->group(function () {
+        Volt::route('/dashboard', 'frontdesk.dashboard')->name('dashboard');
+        Volt::route('/visitors', 'frontdesk.visitors')->name('visitors');
+        Volt::route('/meetings', 'frontdesk.meetings')->name('meetings');
+        Volt::route('/feedback', 'frontdesk.feedback')->name('feedback');
+        Volt::route('/support', 'frontdesk.support')->name('support');
+    });
+
+    // Librarian (Volt pages)
+    Route::prefix('library')->name('librarian.')->middleware('role:librarian')->group(function () {
+        Volt::route('/dashboard', 'librarian.dashboard')->name('dashboard');
+        Volt::route('/inventory', 'librarian.inventory')->name('inventory');
+        Volt::route('/loans', 'librarian.loans')->name('loans');
     });
 });
 

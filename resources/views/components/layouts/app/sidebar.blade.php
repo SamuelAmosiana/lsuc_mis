@@ -85,6 +85,42 @@
                     </flux:navlist.group>
                 @endif
 
+                @if((auth()->user()->role ?? '') === 'enrollment_officer')
+                    <flux:navlist.group heading="Enrollment" class="grid">
+                        <flux:navlist.item :href="route('enrollment.dashboard')" :current="request()->routeIs('enrollment.dashboard')" wire:navigate>Dashboard</flux:navlist.item>
+                        <flux:navlist.item :href="route('enrollment.applications')" :current="request()->routeIs('enrollment.applications')" wire:navigate>Applications</flux:navlist.item>
+                        <flux:navlist.item :href="route('enrollment.accommodation')" :current="request()->routeIs('enrollment.accommodation')" wire:navigate>Accommodation</flux:navlist.item>
+                        <flux:navlist.item :href="route('enrollment.communications')" :current="request()->routeIs('enrollment.communications')" wire:navigate>Communications</flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
+
+                @if((auth()->user()->role ?? '') === 'programme_coordinator')
+                    <flux:navlist.group heading="Coordinator" class="grid">
+                        <flux:navlist.item :href="route('coordinator.dashboard')" :current="request()->routeIs('coordinator.dashboard')" wire:navigate>Dashboard</flux:navlist.item>
+                        <flux:navlist.item :href="route('coordinator.calendar')" :current="request()->routeIs('coordinator.calendar')" wire:navigate>Academic Calendar</flux:navlist.item>
+                        <flux:navlist.item :href="route('coordinator.timetables')" :current="request()->routeIs('coordinator.timetables')" wire:navigate>Timetables</flux:navlist.item>
+                        <flux:navlist.item :href="route('coordinator.registrations')" :current="request()->routeIs('coordinator.registrations')" wire:navigate>Registrations</flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
+
+                @if((auth()->user()->role ?? '') === 'front_desk_officer')
+                    <flux:navlist.group heading="Front Desk" class="grid">
+                        <flux:navlist.item :href="route('frontdesk.dashboard')" :current="request()->routeIs('frontdesk.dashboard')" wire:navigate>Dashboard</flux:navlist.item>
+                        <flux:navlist.item :href="route('frontdesk.visitors')" :current="request()->routeIs('frontdesk.visitors')" wire:navigate>Visitors</flux:navlist.item>
+                        <flux:navlist.item :href="route('frontdesk.meetings')" :current="request()->routeIs('frontdesk.meetings')" wire:navigate>Meetings</flux:navlist.item>
+                        <flux:navlist.item :href="route('frontdesk.feedback')" :current="request()->routeIs('frontdesk.feedback')" wire:navigate>Feedback</flux:navlist.item>
+                        <flux:navlist.item :href="route('frontdesk.support')" :current="request()->routeIs('frontdesk.support')" wire:navigate>Support</flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
+
+                @if((auth()->user()->role ?? '') === 'librarian')
+                    <flux:navlist.group heading="Library" class="grid">
+                        <flux:navlist.item :href="route('librarian.dashboard')" :current="request()->routeIs('librarian.dashboard')" wire:navigate>Dashboard</flux:navlist.item>
+                        <flux:navlist.item :href="route('librarian.inventory')" :current="request()->routeIs('librarian.inventory')" wire:navigate>Inventory</flux:navlist.item>
+                        <flux:navlist.item :href="route('librarian.loans')" :current="request()->routeIs('librarian.loans')" wire:navigate>Loans</flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
+
                 @if((auth()->user()->role ?? '') === 'lecturer')
                     <flux:navlist.group heading="Lecturer" class="grid">
                         <flux:navlist.item :href="route('lecturer.dashboard')" :current="request()->routeIs('lecturer.dashboard')" wire:navigate>Dashboard</flux:navlist.item>
