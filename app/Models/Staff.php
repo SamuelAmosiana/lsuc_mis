@@ -24,6 +24,14 @@ class Staff extends Model
     {
         return $this->belongsToMany(Role::class, 'staff_role', 'staff_id', 'role_id');
     }
+    
+    /**
+     * Get the courses that the staff member is assigned to.
+     */
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(\App\Models\Course::class, 'lecturer_course', 'staff_id', 'course_id');
+    }
 }
 
 

@@ -30,8 +30,44 @@ class LecturerCourseSeeder extends Seeder
             return;
         }
         
-        // Attach courses to the lecturer
-        $lecturer->courses()->sync($courses->pluck('course_id')->toArray());
+        // Get the staff profile for the lecturer
+        $staffProfile = $lecturer->staffProfile;
+        
+        if (!$staffProfile) {
+            $this->command->warn('No staff profile found for the lecturer. Creating one...');
+            $staffProfile = $lecturer->staffProfile()->create([
+                'name' => $lecturer->name,
+                'email' => $lecturer->email,
+                'phone' => '1234567890',
+                'address' => '123 Lecturer St',
+                'nrc' => '123456/78/9012',
+                'gender' => 'Other',
+                'next_of_kin' => 'John Doe',
+                'department_id' => 1, // Default department
+                'position' => 'Lecturer',
+                'employment_date' => now(),
+            ]);
+        }
+        
+        // Get the staff record
+        $staff = $staffProfile->staff;
+        
+        if (!$staff) {
+            $this->command->warn('No staff record found for the lecturer. Creating one...');
+            $staff = \App\Models\Staff::create([
+                'name' => $lecturer->name,
+                'email' => $lecturer->email,
+                'phone' => '1234567890',
+                'address' => '123 Lecturer St',
+                'nrc' => '123456/78/9012',
+                'gender' => 'Other',
+                'next_of_kin' => 'John Doe',
+                'department_id' => 1, // Default department
+            ]);
+        }
+        
+        // Attach courses to the staff record
+        $staff->courses()->sync($courses->pluck('course_id')->toArray());
         
         $this->command->info('Assigned ' . $courses->count() . ' courses to the lecturer.');
     }

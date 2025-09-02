@@ -90,6 +90,18 @@ class LecturerController extends Controller
             $attendanceStats = $this->getAttendanceStats($lecturer->id);
             \Log::info('Attendance Stats', $attendanceStats);
             
+            // Get upcoming deadlines
+            $upcomingDeadlines = $this->getUpcomingDeadlines($lecturer->id);
+            \Log::info('Upcoming Deadlines', [
+                'count' => $upcomingDeadlines->count(),
+                'deadlines' => $upcomingDeadlines->map(fn($deadline) => [
+                    'id' => $deadline->id,
+                    'title' => $deadline->title,
+                    'due_date' => $deadline->due_date,
+                    'course' => $deadline->course ? $deadline->course->code : 'N/A'
+                ])
+            ]);
+            
             $viewData = [
                 'assignedCourses' => $assignedCourses,
                 'totalStudents' => $totalStudents,
@@ -97,6 +109,8 @@ class LecturerController extends Controller
                 'recentResults' => $recentResults,
                 'recentActivity' => $recentActivity,
                 'attendanceStats' => $attendanceStats,
+                'upcomingDeadlines' => $upcomingDeadlines,
+                'upcomingDeadlinesCount' => $upcomingDeadlines->count(),
             ];
             
             \Log::info('Rendering lecturer.dashboard view with data', [
@@ -216,11 +230,10 @@ class LecturerController extends Controller
     }
 
     /**
-     * Get attendance statistics
+     * Get attendance statistics for the lecturer's courses
      */
     private function getAttendanceStats($lecturerId)
     {
-        // This is a simplified example - adjust based on your attendance model
         $totalSessions = \App\Models\Attendance::whereHas('course', function($q) use ($lecturerId) {
             $q->where('lecturer_id', $lecturerId);
         })
@@ -241,6 +254,22 @@ class LecturerController extends Controller
             'present_count' => $presentCount,
             'attendance_rate' => $attendanceRate,
         ];
+    }
+    
+    /**
+     * Get upcoming deadlines for the lecturer's courses
+     */
+    private function getUpcomingDeadlines($lecturerId)
+    {
+        return Assessment::whereHas('course', function($q) use ($lecturerId) {
+            $q->where('lecturer_id', $lecturerId);
+        })
+        ->with(['course'])
+        ->where('due_date', '>=', now())
+        ->where('due_date', '<=', now()->addDays(14)) // Next 14 days
+        ->orderBy('due_date', 'asc')
+        ->take(5) // Limit to 5 upcoming deadlines
+        ->get();
     }
 
     /**

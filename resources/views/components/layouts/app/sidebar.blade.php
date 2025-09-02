@@ -65,6 +65,24 @@
                         <flux:navlist.item icon="cog" :href="route('admin.settings')" :current="request()->routeIs('admin.settings')" wire:navigate>System Settings</flux:navlist.item>
                     </flux:navlist.group>
                 @endif
+
+                @if((auth()->user()->role ?? '') === 'human_resource')
+                    <flux:navlist.group heading="HR" class="grid">
+                        <flux:navlist.item :href="route('hr.dashboard')" :current="request()->routeIs('hr.dashboard')" wire:navigate>Dashboard</flux:navlist.item>
+                        <flux:navlist.item :href="route('hr.attendance')" :current="request()->routeIs('hr.attendance')" wire:navigate>Attendance</flux:navlist.item>
+                        <flux:navlist.item :href="route('hr.salaries')" :current="request()->routeIs('hr.salaries')" wire:navigate>Salaries</flux:navlist.item>
+                        <flux:navlist.item :href="route('hr.staff')" :current="request()->routeIs('hr.staff')" wire:navigate>Staff</flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
+
+                @if((auth()->user()->role ?? '') === 'lecturer')
+                    <flux:navlist.group heading="Lecturer" class="grid">
+                        <flux:navlist.item :href="route('lecturer.dashboard')" :current="request()->routeIs('lecturer.dashboard')" wire:navigate>Dashboard</flux:navlist.item>
+                        <flux:navlist.item :href="route('lecturer.upload-marks')" :current="request()->routeIs('lecturer.upload-marks')" wire:navigate>Upload Marks</flux:navlist.item>
+                        <flux:navlist.item :href="route('lecturer.roster')" :current="request()->routeIs('lecturer.roster')" wire:navigate>Course Rosters</flux:navlist.item>
+                        <flux:navlist.item :href="route('lecturer.reports')" :current="request()->routeIs('lecturer.reports')" wire:navigate>Reports</flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
             </flux:navlist>
 
             <flux:spacer />

@@ -12,14 +12,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('lecturer_course', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->unsignedBigInteger('course_id');
+            $table->unsignedInteger('staff_id');
+            $table->unsignedInteger('course_id');
+            $table->primary(['staff_id', 'course_id']);
+            $table->foreign('staff_id')->references('staff_id')->on('staff')->onDelete('cascade');
             $table->foreign('course_id')->references('course_id')->on('course')->onDelete('cascade');
             $table->timestamps();
-            
-            // Ensure a lecturer can't be assigned to the same course multiple times
-            $table->unique(['user_id', 'course_id']);
         });
     }
 

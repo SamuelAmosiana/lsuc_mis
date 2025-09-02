@@ -44,12 +44,12 @@ Route::get('/test-lecturer-route', function () {
 })->middleware(['auth', 'role:lecturer']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // HR Dashboard
-    Route::prefix('hr')->name('hr.')->middleware('role:hr')->group(function () {
-        Route::get('/dashboard', [\App\Http\Controllers\HR\HRController::class, 'dashboard'])->name('dashboard');
-        Route::get('/attendance', [\App\Http\Controllers\HR\AttendanceController::class, 'index'])->name('attendance.index');
-        Route::get('/salaries', [\App\Http\Controllers\HR\SalaryController::class, 'index'])->name('salaries.index');
-        Route::get('/students', [\App\Http\Controllers\HR\StudentController::class, 'index'])->name('students.index');
+    // HR Dashboard (Volt pages)
+    Route::prefix('hr')->name('hr.')->middleware('role:human_resource')->group(function () {
+        Volt::route('/dashboard', 'hr.dashboard')->name('dashboard');
+        Volt::route('/attendance', 'hr.attendance')->name('attendance');
+        Volt::route('/salaries', 'hr.salaries')->name('salaries');
+        Volt::route('/staff', 'hr.staff')->name('staff');
     });
     
     // Admin Dashboard
@@ -109,36 +109,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     
     // Student Dashboard
-    // Lecturer Dashboard
+    // Lecturer Dashboard (Volt pages)
     Route::prefix('lecturer')->name('lecturer.')->middleware('role:lecturer')->group(function () {
-        // Dashboard
-        Route::get('/dashboard', [\App\Http\Controllers\Lecturer\LecturerController::class, 'dashboard'])->name('dashboard');
-        
-        // Courses
-        Route::get('/courses', [\App\Http\Controllers\Lecturer\CourseController::class, 'index'])->name('courses.index');
-        Route::get('/courses/{course}', [\App\Http\Controllers\Lecturer\CourseController::class, 'show'])->name('courses.show');
-        
-        // Assessments
-        Route::get('/assessments', [\App\Http\Controllers\Lecturer\AssessmentController::class, 'index'])->name('assessments.index');
-        Route::get('/assessments/create', [\App\Http\Controllers\Lecturer\AssessmentController::class, 'create'])->name('assessments.create');
-        Route::post('/assessments', [\App\Http\Controllers\Lecturer\AssessmentController::class, 'store'])->name('assessments.store');
-        Route::get('/assessments/{assessment}/submissions', [\App\Http\Controllers\Lecturer\SubmissionController::class, 'index'])->name('assessments.submissions');
-        
-        // Results
-        Route::get('/results', [\App\Http\Controllers\Lecturer\ResultController::class, 'index'])->name('results.index');
-        Route::get('/upload-marks', [\App\Http\Controllers\Lecturer\LecturerController::class, 'showUploadMarksForm'])->name('upload-marks');
-        Route::post('/upload-marks', [\App\Http\Controllers\Lecturer\LecturerController::class, 'uploadMarks'])->name('upload-marks.store');
-        
-        // Attendance
-        Route::get('/attendance', [\App\Http\Controllers\Lecturer\AttendanceController::class, 'index'])->name('attendance.index');
-        Route::post('/attendance', [\App\Http\Controllers\Lecturer\AttendanceController::class, 'store'])->name('attendance.store');
-        
-        // Students
-        Route::get('/students', [\App\Http\Controllers\Lecturer\StudentController::class, 'index'])->name('students.index');
-        
-        // Profile
-        Route::get('/profile', [\App\Http\Controllers\Lecturer\ProfileController::class, 'edit'])->name('profile.edit');
-        Route::put('/profile', [\App\Http\Controllers\Lecturer\ProfileController::class, 'update'])->name('profile.update');
+        Volt::route('/dashboard', 'lecturer.dashboard')->name('dashboard');
+        Volt::route('/upload-marks', 'lecturer.upload-marks')->name('upload-marks');
+        Volt::route('/roster', 'lecturer.roster')->name('roster');
+        Volt::route('/reports', 'lecturer.reports')->name('reports');
     });
     
     // Student Routes

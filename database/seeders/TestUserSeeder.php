@@ -125,7 +125,46 @@ class TestUserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        // Lecturer
+        $lecturer = User::updateOrCreate(
+            ['email' => 'lecturer@lscollege.test'],
+            [
+                'name' => 'Test Lecturer',
+                'password' => Hash::make('password'),
+                'role' => 'lecturer',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Create staff record for lecturer if it doesn't exist
+        $lecturerStaff = Staff::firstOrCreate(
+            ['email' => 'lecturer@lscollege.test'],
+            [
+                'name' => 'Test Lecturer',
+                'phone' => '1234567890',
+                'address' => '456 Faculty St',
+                'nrc' => '654321/78/9012',
+                'gender' => 'Other',
+                'next_of_kin' => 'John Doe',
+                'department_id' => $department->department_id,
+            ]
+        );
+
+        // Create lecturer role if it doesn't exist
+        $lecturerRole = Role::firstOrCreate(
+            ['role_name' => 'lecturer'],
+            [
+                'role_name' => 'lecturer',
+                'role_description' => 'Teaching and student assessment'
+            ]
+        );
+
+        // Assign lecturer role to the staff
+        DB::table('staff_role')->updateOrInsert(
+            ['staff_id' => $lecturerStaff->staff_id, 'role_id' => $lecturerRole->role_id],
+            []
+        );
     }
+
 }
-
-
