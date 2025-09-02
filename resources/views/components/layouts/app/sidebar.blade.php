@@ -121,6 +121,17 @@
                     </flux:navlist.group>
                 @endif
 
+                @if((auth()->user()->role ?? '') === 'student')
+                    <flux:navlist.group heading="Student" class="grid">
+                        <flux:navlist.item :href="route('student.dashboard')" :current="request()->routeIs('student.dashboard')" wire:navigate>Dashboard</flux:navlist.item>
+                        <flux:navlist.item :href="route('student.profile')" :current="request()->routeIs('student.profile')" wire:navigate>Profile</flux:navlist.item>
+                        <flux:navlist.item :href="route('student.courses')" :current="request()->routeIs('student.courses')" wire:navigate>Courses</flux:navlist.item>
+                        <flux:navlist.item :href="route('student.results')" :current="request()->routeIs('student.results')" wire:navigate>Results</flux:navlist.item>
+                        <flux:navlist.item :href="route('student.accommodation')" :current="request()->routeIs('student.accommodation')" wire:navigate>Accommodation</flux:navlist.item>
+                        <flux:navlist.item :href="route('student.docket')" :current="request()->routeIs('student.docket')" wire:navigate>Docket</flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
+
                 @if((auth()->user()->role ?? '') === 'lecturer')
                     <flux:navlist.group heading="Lecturer" class="grid">
                         <flux:navlist.item :href="route('lecturer.dashboard')" :current="request()->routeIs('lecturer.dashboard')" wire:navigate>Dashboard</flux:navlist.item>

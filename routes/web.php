@@ -85,41 +85,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Volt::route('/reports', 'lecturer.reports')->name('reports');
     });
     
-    // Student Routes
+    // Student (Volt pages)
     Route::prefix('student')->name('student.')->middleware('role:student')->group(function () {
-        // Dashboard
-        Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
-        
-        // Profile
-        Route::get('/profile', [StudentController::class, 'profile'])->name('profile');
-        Route::put('/profile', [StudentController::class, 'updateProfile'])->name('profile.update');
-        
-        // Finances
-        Route::get('/finances', [StudentController::class, 'finances'])->name('finances');
-        
-        // Courses
-        Route::get('/courses', [StudentController::class, 'courses'])->name('courses');
-        Route::post('/courses/register', [StudentController::class, 'registerCourses'])->name('courses.register');
-        
-        // Accommodation
-        Route::get('/accommodation', [StudentController::class, 'accommodation'])->name('accommodation');
-        Route::post('/accommodation/apply', [StudentController::class, 'applyAccommodation'])->name('accommodation.apply');
-        
-        // Results and academic records
-        Route::get('/results', [StudentController::class, 'results'])->name('results');
-        
-        // Document docket and downloads
-        Route::prefix('docket')->name('docket.')->group(function () {
-            Route::get('/', [StudentController::class, 'docket'])->name('index');
-            Route::get('/download/{type}', [StudentController::class, 'downloadDocket'])->name('download');
-            Route::post('/request', [StudentController::class, 'requestDocument'])->name('request');
-        });
-        
-        // Additional Student Routes
-        Route::get('/timetable', [StudentController::class, 'timetable'])->name('timetable');
-        Route::get('/library', [StudentController::class, 'library'])->name('library');
-        Route::get('/notices', [StudentController::class, 'notices'])->name('notices');
-        Route::get('/support', [StudentController::class, 'support'])->name('support');
+        Volt::route('/dashboard', 'student.dashboard')->name('dashboard');
+        Volt::route('/profile', 'student.profile')->name('profile');
+        Volt::route('/courses', 'student.courses')->name('courses');
+        Volt::route('/results', 'student.results')->name('results');
+        Volt::route('/accommodation', 'student.accommodation')->name('accommodation');
+        Volt::route('/docket', 'student.docket')->name('docket');
     });
     
     // Enrollment Office (Volt pages)
