@@ -11,14 +11,14 @@ return new class extends Migration
         // List of all user emails that should exist with valid roles
         $users = [
             'admin@lscollege.test' => ['name' => 'Super Admin', 'role' => 'admin'],
-            'hr@lsuc.edu' => ['name' => 'Human Resource', 'role' => 'hr'],
-            'hrstaff@lsuc.edu' => ['name' => 'HR Staff', 'role' => 'hr'],
+            'hr@lsuc.edu' => ['name' => 'Human Resource', 'role' => 'human_resource'],
+            'hrstaff@lsuc.edu' => ['name' => 'HR Staff', 'role' => 'human_resource'],
             'lecturer@lsuc.edu.lr' => ['name' => 'Lecturer', 'role' => 'lecturer'],
             'student@lscollege.test' => ['name' => 'Student', 'role' => 'student'],
-            'coordinator@lscollege.test' => ['name' => 'Programmes Coordinator', 'role' => 'coordinator'],
-            'enrollment@lscollege.test' => ['name' => 'Enrollments', 'role' => 'enrollment'],
-            'accounts@lscollege.test' => ['name' => 'Accounts', 'role' => 'accountant'],
-            'frontdesk@lscollege.test' => ['name' => 'Front Desk', 'role' => 'frontdesk'],
+            'coordinator@lscollege.test' => ['name' => 'Programmes Coordinator', 'role' => 'programme_coordinator'],
+            'enrollment@lscollege.test' => ['name' => 'Enrollments', 'role' => 'enrollment_officer'],
+            'accounts@lscollege.test' => ['name' => 'Accounts', 'role' => 'accounts'],
+            'frontdesk@lscollege.test' => ['name' => 'Front Desk', 'role' => 'front_desk_officer'],
             'librarian@lscollege.test' => ['name' => 'Librarian', 'role' => 'librarian']
         ];
 

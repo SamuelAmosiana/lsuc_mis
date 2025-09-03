@@ -36,7 +36,7 @@ return new class extends Migration
             [
                 'name' => 'Human Resource',
                 'email' => 'hr@lsuc.edu',
-                'role' => 'hr',
+                'role' => 'human_resource',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'created_at' => now(),
@@ -45,7 +45,7 @@ return new class extends Migration
             [
                 'name' => 'HR Staff',
                 'email' => 'hrstaff@lsuc.edu',
-                'role' => 'hr',
+                'role' => 'human_resource',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'created_at' => now(),
@@ -72,7 +72,7 @@ return new class extends Migration
             [
                 'name' => 'Programmes Coordinator',
                 'email' => 'coordinator@lscollege.test',
-                'role' => 'coordinator',
+                'role' => 'programme_coordinator',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'created_at' => now(),
@@ -81,7 +81,7 @@ return new class extends Migration
             [
                 'name' => 'Enrollments',
                 'email' => 'enrollment@lscollege.test',
-                'role' => 'enrollment',
+                'role' => 'enrollment_officer',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'created_at' => now(),
@@ -90,7 +90,7 @@ return new class extends Migration
             [
                 'name' => 'Accounts',
                 'email' => 'accounts@lscollege.test',
-                'role' => 'accountant',
+                'role' => 'accounts',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'created_at' => now(),
@@ -99,7 +99,7 @@ return new class extends Migration
             [
                 'name' => 'Front Desk',
                 'email' => 'frontdesk@lscollege.test',
-                'role' => 'frontdesk',
+                'role' => 'front_desk_officer',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'created_at' => now(),
