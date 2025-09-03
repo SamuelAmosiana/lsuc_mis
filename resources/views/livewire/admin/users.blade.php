@@ -25,7 +25,13 @@ new #[Layout('components.layouts.app')] class extends Component {
 
     public function mount(): void
     {
-        $this->roles = Role::orderBy('role_name')->pluck('role_name');
+        $list = Role::orderBy('role_name')->pluck('role_name')->all();
+        if (empty($list)) {
+            $list = [
+                'super_admin','admin','programme_coordinator','human_resource','enrollment_officer','accounts','front_desk_officer','librarian','lecturer','student',
+            ];
+        }
+        $this->roles = $list;
         $this->loadData();
     }
 
@@ -112,9 +118,11 @@ new #[Layout('components.layouts.app')] class extends Component {
             <flux:input wire:model="email" label="Email" type="email" required />
             <flux:input wire:model="password" label="Password" type="password" placeholder="Leave blank to keep" />
             <flux:select wire:model="role" label="Role" required>
-                @foreach($roles as $r)
+                @forelse($roles as $r)
                     <option value="{{ $r }}">{{ ucfirst(str_replace('_',' ', $r)) }}</option>
-                @endforeach
+                @empty
+                    <option value="student">Student</option>
+                @endforelse
             </flux:select>
             <div class="flex gap-2">
                 <flux:button type="submit" variant="primary">{{ $editingId ? 'Update' : 'Create' }}</flux:button>
@@ -124,7 +132,11 @@ new #[Layout('components.layouts.app')] class extends Component {
             </div>
         </form>
 
-        <div class="md:col-span-2 overflow-auto">
+        <div class="md:col-span-2 overflow-auto rounded-xl bg-white border border-orange-200 shadow-sm">
+            <div class="p-4 border-b border-orange-100 flex items-center justify-between">
+                <div class="text-sm text-neutral-700">Total Users: {{ count($users) }}</div>
+                <div class="text-xs text-neutral-500">Real-time</div>
+            </div>
             <table class="min-w-full text-sm">
                 <thead>
                     <tr class="text-left">
@@ -137,7 +149,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                 </thead>
                 <tbody>
                     @foreach($users as $u)
-                        <tr class="border-t border-neutral-200 dark:border-neutral-700">
+                        <tr class="border-t border-neutral-200 dark:border-neutral-700 hover:bg-orange-50/40">
                             <td class="p-2">{{ $u->id }}</td>
                             <td class="p-2">{{ $u->name }}</td>
                             <td class="p-2">{{ $u->email }}</td>

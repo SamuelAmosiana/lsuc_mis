@@ -10,12 +10,11 @@ class AdminController extends Controller
 {
     /**
      * Display the admin dashboard.
+     * This is handled by Livewire Volt component at resources/views/livewire/admin/dashboard.blade.php
      */
-    public function dashboard(): View
+    public function dashboard()
     {
-        return view('admin.dashboard', [
-            'user' => auth()->user()
-        ]);
+        return redirect()->route('admin.home');
     }
 
     /**

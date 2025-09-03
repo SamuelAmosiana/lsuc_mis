@@ -2,12 +2,32 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Models\User;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Accounts\AccountsController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+// Test route to check admin user
+Route::get('/check-admin', function () {
+    $user = User::where('email', 'admin@lscollege.test')->first();
+    
+    if (!$user) {
+        return response()->json(['error' => 'Admin user not found'], 404);
+    }
+    
+    return response()->json([
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'role' => $user->role,
+        'password_set' => !empty($user->password),
+        'created_at' => $user->created_at,
+        'updated_at' => $user->updated_at,
+    ]);
+});
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -150,6 +170,8 @@ Route::middleware(['auth','verified','role:super_admin,admin'])->group(function 
         ->name('admin.roles');
     Volt::route('admin/settings', 'admin.settings')
         ->name('admin.settings');
+    Volt::route('admin/reports', 'admin.reports')
+        ->name('admin.reports');
 });
 
 require __DIR__.'/auth.php';
