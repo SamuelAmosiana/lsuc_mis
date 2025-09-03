@@ -2,6 +2,8 @@
 
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Student;
+use App\Models\Staff;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
@@ -48,13 +50,14 @@ new #[Layout('components.layouts.app')] class extends Component {
     public function create(): void
     {
         $this->validate();
-        User::create([
+        $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
             'password' => $this->password ?: 'password',
             'role' => $this->role,
             'email_verified_at' => now(),
         ]);
+        $this->provisionLinkedRecords($user, null, $this->role);
         $this->resetForm();
         $this->loadData();
         session()->flash('status', 'User created');
@@ -73,6 +76,7 @@ new #[Layout('components.layouts.app')] class extends Component {
     {
         $this->validate();
         $u = User::findOrFail($this->editingId);
+        $oldRole = $u->role;
         $data = [
             'name' => $this->name,
             'email' => $this->email,
@@ -82,6 +86,7 @@ new #[Layout('components.layouts.app')] class extends Component {
             $data['password'] = $this->password;
         }
         $u->update($data);
+        $this->provisionLinkedRecords($u, $oldRole, $this->role);
         $this->resetForm();
         $this->loadData();
         session()->flash('status', 'User updated');
@@ -101,6 +106,30 @@ new #[Layout('components.layouts.app')] class extends Component {
         $this->email = '';
         $this->password = '';
         $this->role = 'student';
+    }
+
+    private function provisionLinkedRecords(User $user, ?string $oldRole, string $newRole): void
+    {
+        if ($newRole === 'student') {
+            Student::updateOrCreate(
+                ['student_id' => $user->id],
+                ['name' => $user->name]
+            );
+        }
+
+        $staffRoles = [
+            'super_admin','admin','programme_coordinator','human_resource','enrollment_officer','accounts','front_desk_officer','librarian','lecturer'
+        ];
+        if (in_array($newRole, $staffRoles, true)) {
+            Staff::updateOrCreate(
+                ['email' => $user->email],
+                [
+                    'name' => $user->name,
+                    'staff_number' => 'STF-'.str_pad((string) $user->id, 5, '0', STR_PAD_LEFT),
+                    'department_id' => null,
+                ]
+            );
+        }
     }
 }; ?>
 

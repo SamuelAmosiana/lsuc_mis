@@ -54,7 +54,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
         $redirectRoute = match ($role) {
             'super_admin', 'admin' => 'admin.dashboard',
             'programme_coordinator' => 'coordinator.dashboard',
+            'human_resource' => 'hr.dashboard',
+            'enrollment_officer' => 'enrollment.dashboard',
             'accounts' => 'accounts.dashboard',
+            'front_desk_officer' => 'frontdesk.dashboard',
+            'librarian' => 'librarian.dashboard',
             'lecturer' => 'lecturer.dashboard',
             'student' => 'student.dashboard',
             default => 'dashboard',
