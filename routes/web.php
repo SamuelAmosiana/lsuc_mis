@@ -112,6 +112,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Volt::route('/courses', 'student.courses')->name('courses');
         Volt::route('/results', 'student.results')->name('results');
         Volt::route('/accommodation', 'student.accommodation')->name('accommodation');
+        Volt::route('/finance', 'student.finance')->name('finance');
         Volt::route('/docket', 'student.docket')->name('docket');
     });
     

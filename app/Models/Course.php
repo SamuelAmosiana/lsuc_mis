@@ -55,6 +55,14 @@ class Course extends Model
     }
     
     /**
+     * Get the marks for this course.
+     */
+    public function marks()
+    {
+        return $this->hasMany(StudentMark::class, 'course_id', 'course_id');
+    }
+    
+    /**
      * Get the lecturers who teach this course.
      */
     public function lecturers()

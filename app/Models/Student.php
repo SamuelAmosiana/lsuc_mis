@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Student extends Model
@@ -58,10 +60,74 @@ class Student extends Model
         return $this->hasMany(StudentDocument::class);
     }
 
-    // For backward compatibility
-    public function programme(): BelongsTo
+    // Course Relationships
+    public function courseRegistrations(): HasMany
     {
-        return $this->program();
+        return $this->hasMany(CourseRegistration::class, 'student_id', 'user_id');
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_registrations', 'student_id', 'course_id')
+                    ->wherePivot('status', 'approved')
+                    ->withPivot('status', 'approved_at');
+    }
+
+    // Finance Relationships
+    public function bills(): HasMany
+    {
+        return $this->hasMany(Bill::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasManyThrough(Payment::class, Bill::class);
+    }
+
+    // Accommodation Relationships
+    public function accommodationAssignments(): HasMany
+    {
+        return $this->hasMany(AccommodationAssignment::class, 'student_id', 'user_id');
+    }
+
+    // Results Relationships
+    public function marks(): HasMany
+    {
+        return $this->hasMany(StudentMark::class, 'student_id', 'user_id');
+    }
+
+    // Helper Methods
+    public function getCurrentBalance()
+    {
+        return $this->bills()->sum('balance');
+    }
+
+    public function getTotalAmountDue()
+    {
+        return $this->bills()->sum('total_amount');
+    }
+
+    public function getTotalAmountPaid()
+    {
+        return $this->bills()->sum('amount_paid');
+    }
+
+    public function calculateCGPA()
+    {
+        $marks = $this->marks()->whereNotNull('total')->get();
+        if ($marks->isEmpty()) {
+            return 0;
+        }
+        return $marks->avg('total') / 20; // Assuming marks are out of 100, convert to 5.0 scale
+    }
+
+    public function getCurrentAccommodation()
+    {
+        return $this->accommodationAssignments()
+                    ->whereNull('check_out')
+                    ->orWhere('check_out', '>', now())
+                    ->with(['room.hostel'])
+                    ->first();
     }
 }
 
